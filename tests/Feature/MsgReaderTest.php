@@ -42,6 +42,17 @@ it('keeps body kludges and assigns stable external ids', function (): void {
         ->and($first->externalId)->not->toStartWith('hash:');
 });
 
+it('attaches control metadata and provenance', function (): void {
+    $messages = array_values(iterator_to_array(new MsgReader()->read(msgFixtureArea())));
+    $first = firstMsgMessage($messages);
+
+    expect($first->controlLines?->msgid)->toBe('2:230/150 12345678')
+        ->and($first->provenance?->sourceType)->toBe('msg')
+        ->and($first->provenance?->sourcePath)->toEndWith('/1.MSG')
+        ->and($first->provenance?->sourceId)->toBe('1')
+        ->and($first->provenance?->sourceOffset)->toBeNull();
+});
+
 /**
  * @param list<ParsedMessage> $messages
  */

@@ -6,6 +6,7 @@ namespace Golded\Ftn\Msg;
 
 use DateTimeImmutable;
 use Golded\Ftn\Contracts\MessageBaseReader;
+use Golded\Ftn\MessageProvenance;
 use Golded\Ftn\ParsedMessage;
 use Golded\Ftn\ReaderOptions;
 use Golded\Ftn\Support\CharsetDetector;
@@ -70,6 +71,12 @@ final class MsgReader implements MessageBaseReader
             attributesRaw: $attr,
             postedAt: $postedAt,
             externalId: $externalId,
+            controlLines: ControlLines::parseMessage($bodyRaw),
+            provenance: new MessageProvenance(
+                sourceType: 'msg',
+                sourcePath: $file,
+                sourceId: (string) $msgno,
+            ),
         );
     }
 
